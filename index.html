@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <title>Color Thread Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <style>
+
+    body {
+      max-width: 100%;
+      background-color: #F7F6EF;
+    }
+
+    .tab {
+      overflow: hidden;
+      display: flex;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      position: sticky;
+      top: 0;
+    }
+
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 28px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+      animation: fadeEffect 1s;
+    }
+    @keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .tabcontent label{
+      margin-left: 5px;
+    }
+
+    .tabcontent button{
+      margin-top: 5px;
+    }
+
+    .tabcontent input,  .tabcontent select {
+      border-radius: 4px;
+      border: 0.2px solid #000000;
+      padding: 4px 4px;
+    }
+
+
+    .btn1, .btn2 {
+      background-color: #4CAF50;
+      align-items: center;
+      background-clip: padding-box;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      font-size: 16px;
+      justify-content: center;
+      line-height: 1.25;
+      padding: 5px;
+      position: relative;
+      margin-left: 5px;
+    }
+
+    .btn2 {
+      background-color: #008CBA;
+
+    }
+
+    .btn1:hover, .btn2:hover{
+      background-color: #00ace6;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    }
+
+    .btn1:active, .btn2:active {
+      background-color: #0086b3;
+      box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+    }
+
+    span.avoidwrap {
+      display: inline-block;
+     }
+
+     .data_section{
+       display: flex;
+       flex-direction: column;
+     }
+
+    .add_item{
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+
+    }
+
+    .add_item_svg {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 40px;
+
+    }
+
+    .main_buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .main_buttons svg {
+      margin-left: 5px;
+      margin-right: 24px;
+      margin-top: 5px;
+    }
+
+    .main_buttons svg:active {
+      color: orange;
+    }
+
+
+    .modal {
+      /*width: 425px;*/
+      max-width: 100%;
+      max-height: 100%;
+      position: fixed;
+      z-index: 1101;
+      left: 50%;
+      top: 50%;
+      border-radius: 8px;
+      margin: auto;
+      transform: translate(-50%, -50%);
+      transition: opacity 400ms ease-in;
+      background: #F7F6EF;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1100;
+
+      opacity: 0.4;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .overlay-button {
+      position: absolute;
+      top: -15px;
+      right: -10px;
+      background-color: teal;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      padding: 3px;
+    }
+
+    .overlay-content{
+      margin: 10px;
+    }
+
+    .all_data_table{
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 70%;
+    }
+
+    .all_data_table tbody {
+      width: 100%;
+    }
+
+    .all_data_table tr:nth-child(2n+1) {
+      background-color: azure;
+    }
+
+    .all_data_table tr:hover {background-color: #ddd;}
+
+    .all_data_table th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .all_data_table tr {
+      text-align: center;
+    }
+
+    #search_output {
+      margin-left: 10px;
+    }
+
+    @media (max-width: 800px)  {
+      .add_item {
+        margin-top: 1rem;
+      }
+
+      span.avoidwrap {
+        margin-top: 7px;
+      }
+
+      .tabcontent input {
+        max-width: calc(90vw - 50px);
+      }
+
+      .add_item_svg {
+        margin-right: 10px;
+      }
+
+      .all_data_table{
+        width: 100%;
+        font-size: 0.7rem;
+      }
+
+      .all_data_table tr td:first-child, .all_data_table tr th:first-child {
+        display: none;
+      }
+
+
+    }
+
+  </style>
+
+  <body>
+    <div class="" id="container">
+      <div class="modal" id="modal" style="display: none;">
+        <button class="overlay-button" onclick="toggle_modal()">X</button>
+        <div id="overlay-content" class="overlay-content">
+          <p>Hey, saved the data to the Google Sheet</p>
+        </div>
+      </div>
+      <h1>Color Thread Finder</h1>
+      <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'enter_data')" disabled>Enter Data</button>
+        <button class="tablinks" onclick="openTab(event, 'query_data')" disabled>Query</button>
+        <button class="tablinks" onclick="openTab(event, 'info')" disabled>Info</button>
+        <button class="google-button" id="signin-button" onclick="handleSignInClick()">Sign In</button>
+        <button class="google-button" id="signout-button" onclick="handleSignOutClick()">Sign Out</button>
+      </div>
+      <p id="msg"></p>
+
+      <div class="tabcontent" id="enter_data">
+        <div id="data_section" class="data_section">
+        </div>
+
+          <br><br>
+          <div class="main_buttons">
+            <button type="button" id="clear_all" class="btn2" onclick="clear_data()" name="clear_data">Clear All</button>
+            <button type="button" id="save_all" class="btn1" onclick="save_data()" name="save_data">Save All</button>
+          </div>
+
+        <br>
+        <p id="msg2"></p>
+
+      </div>
+
+      <div class="tabcontent" id="query_data">
+        <p>Search the color code or color description here. For Color code it has to be an exact match. However <br>
+          for the description field you can use partial search and it is not case sensitive. So a search for blue <br>
+          would find blue, light blue and so on. </p>
+        <br>
+        <div class="search_div">
+            <label for="search_string">Search for:</label>
+            <input type="text" style="width:6em;" id="search_string" name="search_string"></input>
+            <button type="button" id="search_butt" class="btn1" onclick="search_data()" name="search_butt">Search</button>
+            <br>
+            <p id="search_output"></p>
+
+        </div>
+
+
+
+      </div>
+
+      <div class="tabcontent" id="info">
+        <p>You can find the Google Sheet that stores all the info here:
+        <a href="https://docs.google.com/spreadsheets/d/1pqMEnH6t_6g-G_k0z6HekyZ327syzOG3wpKXXT8DN3s/edit?usp=sharing" target="_blank">Google Sheet</a> </p>
+        <div class="main_buttons">
+            <svg xmlns="http://www.w3.org/2000/svg" onclick="refresh_data()" width="24" height="24" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg>
+            <button type="button" id="show_all" class="btn1" onclick="show_data()" name="clear_data">Show all data</button>
+
+        </div>
+        <br>
+        <br>
+        <table id="all_data_table" class="all_data_table">
+            <tbody id="tbody_data_table" >
+
+            </tbody>
+        </table>
+
+      </div>
+    </div>
+    <div class="modal-overlay" id="modal-overlay" style="display: none;" onclick="toggle_modal()"> </div>
+
+  </body>
+
+  <script>
+    var CLIENT_ID = '200702146775-np9sraju3jmopic5n0ajep3l7k3tgumk.apps.googleusercontent.com';
+    var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+    var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
+
+    var data_values = [];
+    var entry_counter = 1;
+
+    var plus_circle = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+    `;
+
+    var x_circle = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+      </svg>
+      `;
+
+    var add_section = `
+        <div class="add_item">
+          <div id="add_item_MMM" class="add_item_svg" onclick="add_item(this)"> ${plus_circle} </div>
+          <div>
+            <span class="avoidwrap">
+              <label for="color_code">Color Code:</label>
+              <input type="text" style="width:4em;" id="color_code_MMM" name="color_code"></input>
+            </span>
+
+            <span class="avoidwrap">
+              <label for="color_desc">Color Desc:</label>
+              <input type="text" style="width:7em;" id="color_desc_MMM" name="color_desc"></input>
+            </span>
+
+            <span class="avoidwrap">
+            <label for="color_amt">Amount left:</label>
+              <select id="color_amt_MMM" name="color_amt">
+                <option value="100" selected>100%</option>
+                <option value="75">75%</option>
+                <option value="50">50%</option>
+                <option value="25">25%</option>
+                <option value="0">0%</option>
+              </select>
+            </span>
+
+            <span class="avoidwrap">
+              <label for="color_note">Note:</label>
+              <input type="text" style="width:15em;" id="color_note_MMM" name="color_note"></input>
+            </span>
+          </div>
+        </div>
+    `;
+
+    var table_header = `
+      <tr>
+        <th>Date</th>
+        <th>Color Code</th>
+        <th>Description</th>
+        <th>Percent left</th>
+        <th>Note</th>
+      </tr>
+    `;
+
+    function handleClientLoad() {
+      //gapi.load('client', initClient);
+      gapi.load('client:auth2', initClient);
+        }
+
+    function initClient() {
+     gapi.client.init({
+       'clientId': CLIENT_ID,
+       'scope': SCOPES,
+       'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+      }).then(function() {
+       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
+       updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        });
+    }
+
+     function handleClientLoad() {
+       gapi.load('client:auth2', initClient);
+     }
+
+     function updateSignInStatus(isSignedIn) {
+       if (isSignedIn) {
+         document.getElementById("msg").innerHTML = "";
+         document.getElementById("signin-button").style.display = "none";
+         document.getElementById("signout-button").style.display = "block";
+         document.getElementById("save_all").style.display="block";
+         document.getElementById("clear_all").style.display="block";
+         document.getElementById("search_string").value = "";
+         document.getElementById("search_output").innerHTML = ""
+
+         var elements = document.getElementsByClassName("tablinks");
+         for (const [key, value] of Object.entries(elements)) {
+           //console.log(`${key}: ${value}`);
+           value.disabled = false;
+         }
+
+
+         init_web_app();
+       }
+       else {
+         document.getElementById("signin-button").style.display = "block";
+         document.getElementById("signout-button").style.display = "none";
+
+         document.getElementById("msg").innerHTML = "You need to sign in";
+         var elements = document.getElementsByClassName("tablinks");
+         for (const [key, value] of Object.entries(elements)) {
+           //console.log(`${key}: ${value}`);
+           value.disabled = true;
+         }
+       }
+     }
+
+     function handleSignInClick(event) {
+       gapi.auth2.getAuthInstance().signIn();
+     }
+
+     function handleSignOutClick(event) {
+       document.getElementById("search_output").innerHTML = "";
+       //document.getElementById("save_all").style.display="none";
+       //document.getElementById("clear_all").style.display="none";
+       document.getElementById("data_section").innerHTML = "";
+       document.getElementById("tbody_data_table").innerHTML = "";
+       document.getElementById("tbody_data_table").style.display = "none";
+       //document.getElementById("info").style.display = "none";
+       //document.getElementById("query_data").style.display = "none";
+
+       var elements = document.getElementsByClassName("tabcontent");
+       for (const [key, value] of Object.entries(elements)) {
+         //console.log(`${key}: ${value}`);
+         value.style.display = "none";
+       }
+
+       gapi.auth2.getAuthInstance().signOut();
+
+
+     }
+
+     function init_web_app() {
+        var queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+          if (urlParams.get("id")) {
+            id = urlParams.get("id");
+            gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: id,
+              range: "'data'",
+            }).then(function(response) {
+              var range3 = response.result;
+              data_values = range3.values;
+            }).then(function(){
+              document.getElementById("data_section").insertAdjacentHTML('beforeend',
+                add_section.replace(/MMM/g, "1"));
+            });
+        }
+      }
+
+    function clear_data(){
+      document.getElementById("data_section").innerHTML = "";
+      document.getElementById("data_section").insertAdjacentHTML('beforeend',
+        add_section.replace(/MMM/g, "1"));
+      entry_counter = 1;
+    }
+
+    function save_data(){
+      var entered_data = [];
+      var line_data = [];
+      var todays_date = new Date();
+      var month = todays_date.getMonth();
+      var year = todays_date.getFullYear();
+      var day = todays_date.getDate();
+      var date_string = month+1 + "\/" + day + "\/" + year;
+      //console.log`(month+1 + "\/" + day + "\/" + year);
+      for (let i=0; i < entry_counter; i++) {
+        var color_code = document.getElementById("color_code_MMM".replace(/MMM/g, (i+1).toString()));
+        var color_desc = document.getElementById("color_desc_MMM".replace(/MMM/g, (i+1).toString()));
+        var color_amt = document.getElementById("color_amt_MMM".replace(/MMM/g, (i+1).toString()));
+        var color_note = document.getElementById("color_note_MMM".replace(/MMM/g, (i+1).toString()));
+        color_code.value == "" ? null :
+          ( line_data = [date_string, color_code.value, color_desc.value, color_amt.value, color_note.value],
+          entered_data.push(line_data),
+          data_values.push(line_data)
+          );
+      }
+
+      if (entered_data.length > 0){
+        gapi.client.sheets.spreadsheets.values.append({
+          spreadsheetId: id,
+          valueInputOption: 'RAW',
+          range: "'data'",
+          values: entered_data
+        }).then (function(){
+          clear_data();
+          document.getElementById("tbody_data_table").innerHTML = "";
+          toggle_modal();
+        });
+      }
+
+    }
+
+    function show_data(){
+      document.getElementById("tbody_data_table").style.display = "table";
+      document.getElementById("tbody_data_table").innerHTML = table_header;
+      data_values.forEach((item, i) => {
+        if (i > 0){
+          var row_data = "";
+          row_data += "<tr>";
+          row_data += "<td>" + (item[0] == undefined ? "" : item[0]) + "</td>";
+          row_data += "<td>" + (item[1] == undefined ? "" : item[1]) + "</td>";
+          row_data += "<td>" + (item[2] == undefined ? "" : item[2]) + "</td>";
+          row_data += "<td>" + (item[3] == undefined ? "" : item[3]) + "</td>";
+          row_data += "<td>" + (item[4] == undefined ? "" : item[4]) + "</td>";
+          row_data += "</tr>";
+          document.getElementById("tbody_data_table").insertAdjacentHTML('beforeend', row_data);
+        }
+      });
+
+    }
+
+    function refresh_data(){
+      data_values = [];
+      var queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+        if (urlParams.get("id")) {
+          id = urlParams.get("id");
+          gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: id,
+            range: "'data'",
+          }).then(function(response) {
+            var range3 = response.result;
+            data_values = range3.values;
+          }).then(function(){
+            show_data();
+          });
+        }
+    }
+
+    function search_data(){
+      document.getElementById("search_output").innerHTML = "";
+      var target_string = document.getElementById("search_string").value;
+      var search_output = document.getElementById("search_output");
+      var match_data = [];
+      var output_text = "";
+
+
+      data_values.forEach((item, i) => {
+        if (i > 0){
+          if (item[1].toLowerCase() == target_string.toLowerCase() || item[2].toLowerCase().includes(target_string.toLowerCase())){
+            match_data.push([item[0] == undefined ? "" : item[0], item[1] == undefined ? "" : item[1],
+              item[2] == undefined ? "" : item[2], item[3] == undefined ? "" : item[3], item[4] == undefined ? "" : item[4]]);
+            //document.getElementById("search_output")
+          }
+        }
+      });
+
+      if (match_data.length > 0) {
+          match_data.forEach((item, i) => {
+            output_text += "Date: " + item[0] + "<br>";
+            output_text += "Color Code: " + item[1] + "<br>";
+            output_text += "Color Desc: " + item[2] + "<br>";
+            output_text += "Amount left: " + item[3] + "%" + "<br>";
+            output_text += "Note: " + item[4] + "<br>";
+            output_text += "<br><br>"
+        });
+
+        search_output.innerHTML = "Found:" + "<br><br>" + output_text;
+      }
+      else {
+        search_output.innerHTML = "Nothing found";
+      }
+
+    }
+
+    function openTab(event, tab_name){
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tab_name).style.display = "block";
+      event.currentTarget.className += " active";
+    }
+
+    function add_item(elem){
+      entry_counter++;
+      document.getElementById("data_section").insertAdjacentHTML('beforeend',
+        add_section.replace(/MMM/g, entry_counter.toString()));
+      document.getElementById("add_item_MMM".replace(/MMM/g, (entry_counter - 1).toString())).style.visibility = "hidden";
+      window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+
+    }
+
+    function toggle_modal() {
+      var modal = document.getElementById("modal");
+      var overlay = document.getElementById("modal-overlay");
+
+      modal.style.display = modal.style.display == 'none' ? '' : 'none';
+      overlay.style.display = overlay.style.display == 'none' ? '' : 'none';
+    }
+
+
+
+  </script>
+  <script async defer src="https://apis.google.com/js/api.js"
+    onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+</html>
