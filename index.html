@@ -267,7 +267,7 @@
       </div>
       <h1>Color Thread Finder</h1>
       <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'enter_data')" disabled>Enter Data</button>
+        <button class="tablinks" id="data_tab" onclick="openTab(event, 'enter_data')" disabled>Enter Data</button>
         <button class="tablinks" onclick="openTab(event, 'query_data')" disabled>Query</button>
         <button class="tablinks" onclick="openTab(event, 'info')" disabled>Info</button>
         <button class="google-button" id="signin-button" onclick="handleSignInClick()">Sign In</button>
@@ -433,9 +433,8 @@
            //console.log(`${key}: ${value}`);
            value.disabled = false;
          }
-
-
          init_web_app();
+         document.getElementById("data_tab").click();
        }
        else {
          document.getElementById("signin-button").style.display = "block";
